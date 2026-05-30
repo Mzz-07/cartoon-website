@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎨 卡通欢乐园 - Cartoon Wonderland</title>
+    <style>
+        /* ============================================
+            1. CSS 变量 & 全局样式
+           ============================================ */
+        :root {
+            --pink: #FF6B9D;
+            --purple: #C084FC;
+            --blue: #60A5FA;
+            --yellow: #FBBF24;
+            --green: #34D399;
+            --orange: #FB923C;
+            --bg: #FFF8F0;
+            --card-bg: #FFFFFF;
+            --text: #4A3142;
+            --shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.15);
+            --radius: 24px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* ============================================
+            2. 浮动装饰背景
+           ============================================ */
+        .bg-decoration {
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.15;
+        }
+        .bg-circle {
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+            animation: floatAround 20s infinite ease-in-out;
+        }
+        .bg-circle:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            background: var(--pink);
+            top: -50px;
+            left: -80px;
+            animation-delay: 0s;
+        }
+        .bg-circle:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            background: var(--blue);
+            top: 60%;
+            right: -60px;
+            animation-delay: -7s;
+        }
+        .bg-circle:nth-child(3) {
+            width: 250px;
+            height: 250px;
+            background: var(--yellow);
+            bottom: -80px;
+            left: 30%;
+            animation-delay: -14s;
+        }
+        .bg-circle:nth-child(4) {
+            width: 180px;
+            height: 180px;
+            background: var(--green);
+            top: 30%;
+            left: -50px;
+            animation-delay: -10s;
+        }
+
+        @keyframes floatAround {
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+            25% {
+                transform: translate(30px, -40px) scale(1.1);
+            }
+            50% {
+                transform: translate(-20px, -20px) scale(0.9);
+            }
+            75% {
+                transform: translate(-30px, 30px) scale(1.05);
+            }
+        }
+
+        /* ============================================
+            3. 导航栏
+           ============================================ */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 3px dashed #FDE68A;
+            padding: 0 24px;
+        }
+        .nav-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+        .nav-logo {
+            font-size: 1.6rem;
+            font-weight: 800;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-logo .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--pink), var(--purple));
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            animation: logoBounce 2s infinite;
+        }
+        @keyframes logoBounce {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-6px);
+            }
+        }
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 8px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 600;
+            padding: 8px 18px;
+            border-radius: 50px;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+        }
+        .nav-links a:hover {
+            background: #FEF3C7;
+            color: #D97706;
+            transform: translateY(-2px);
+        }
+        .nav-links a.btn-nav {
+            background: linear-gradient(135deg, var(--pink), var(--purple));
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(192, 132, 252, 0.4);
+        }
+        .nav-links a.btn-nav:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(192, 132, 252, 0.6);
+        }
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        /* ============================================
+            4. Hero 区域
+           ============================================ */
+        .hero {
+            position: relative;
+            z-index: 1;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 80px 24px 60px;
+            text-align: center;
+        }
+        .hero-badge {
+            display: inline-block;
+            background: #FEF3C7;
+            color: #D97706;
+            font-weight: 700;
+            font-size: 0.9rem;
+            padding: 6px 16px;
+            border-radius: 50px;
+            margin-bottom: 20px;
+            border: 2px dashed #FBBF24;
+            animation: wiggle 3s infinite;
+        }
+        @keyframes wiggle {
+            0%,
+            100% {
+                transform: rotate(0);
+            }
+            25% {
+                transform: rotate(1.5deg);
+            }
+            75% {
+                transform: rotate(-1.5deg);
+            }
+        }
+        .hero h1 {
+            font-size: 3.4rem;
+            font-weight: 900;
+            line-height: 1.2;
+            margin-bottom: 16px;
+        }
+        .hero h1 .gradient-text {
+            background: linear-gradient(135deg, #FF6B9D, #C084FC, #60A5FA);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            color: #7C6F7A;
+            max-width: 600px;
+            margin: 0 auto 32px;
+        }
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            display: inline-block;
+            padding: 14px 32px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--pink), var(--purple));
+            color: #fff;
+            box-shadow: 0 6px 25px rgba(192, 132, 252, 0.4);
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 35px rgba(192, 132, 252, 0.6);
+        }
+        .btn-outline {
+            background: #fff;
+            color: var(--purple);
+            border: 3px solid var(--purple);
+        }
+        .btn-outline:hover {
+            background: #F5F3FF;
+            transform: translateY(-3px);
+        }
+
+        /* ============================================
+            5. 漂浮卡通角色
+           ============================================ */
+        .floating-characters {
+            position: relative;
+            z-index: 1;
+            height: 200px;
+            max-width: 1100px;
+            margin: 0 auto 20px;
+        }
+        .char {
+            position: absolute;
+            font-size: 3rem;
+            animation: float 4s infinite ease-in-out;
+            filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.1));
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .char:hover {
+            transform: scale(1.3) !important;
+        }
+        .char:nth-child(1) {
+            left: 8%;
+            top: 30px;
+            animation-delay: 0s;
+        }
+        .char:nth-child(2) {
+            left: 28%;
+            top: 70px;
+            animation-delay: -1s;
+            font-size: 2.5rem;
+        }
+        .char:nth-child(3) {
+            left: 48%;
+            top: 10px;
+            animation-delay: -2s;
+            font-size: 3.5rem;
+        }
+        .char:nth-child(4) {
+            left: 68%;
+            top: 80px;
+            animation-delay: -0.5s;
+        }
+        .char:nth-child(5) {
+            left: 85%;
+            top: 20px;
+            animation-delay: -1.5s;
+            font-size: 3.2rem;
+        }
+        @keyframes float {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-25px);
+            }
+        }
+
+        /* ============================================
+            6. 角色展示区 (CSS 纯绘卡通人物)
+           ============================================ */
+        .section-title {
+            text-align: center;
+            font-size: 2.2rem;
+            font-weight: 900;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+        .section-subtitle {
+            text-align: center;
+            color: #7C6F7A;
+            margin-bottom: 48px;
+            font-size: 1.05rem;
+            position: relative;
+            z-index: 1;
+        }
+        .characters-grid {
+            position: relative;
+            z-index: 1;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px 80px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 28px;
+        }
+        .character-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 32px 24px 24px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+        .character-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+        }
+        .character-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+        }
+        .character-card.card-pink::before {
+            background: linear-gradient(90deg, #FF6B9D, #F472B6);
+        }
+        .character-card.card-blue::before {
+            background: linear-gradient(90deg, #60A5FA, #818CF8);
+        }
+        .character-card.card-green::before {
+            background: linear-gradient(90deg, #34D399, #6EE7B7);
+        }
+        .character-card.card-yellow::before {
+            background: linear-gradient(90deg, #FBBF24, #F59E0B);
+        }
+        .character-card.card-purple::before {
+            background: linear-gradient(90deg, #C084FC, #A78BFA);
+        }
+        .character-card.card-orange::before {
+            background: linear-gradient(90deg, #FB923C, #F97316);
+        }
+
+        /* --- 纯 CSS 卡通头像 --- */
+        .cartoon-face {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            position: relative;
+            animation: faceBounce 3s infinite ease-in-out;
+        }
+        @keyframes faceBounce {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+        .cartoon-face .eye {
+            width: 14px;
+            height: 16px;
+            background: #333;
+            border-radius: 50%;
+            position: absolute;
+            top: 32px;
+        }
+        .cartoon-face .eye.left {
+            left: 26px;
+        }
+        .cartoon-face .eye.right {
+            right: 26px;
+        }
+        .cartoon-face .eye::after {
+            content: '';
+            width: 5px;
+            height: 5px;
+            background: #fff;
+            border-radius: 50%;
+            position: absolute;
+            top: 3px;
+            left: 3px;
+        }
+        .cartoon-face .mouth {
+            width: 28px;
+            height: 14px;
+            border-bottom: 3px solid #333;
+            border-radius: 0 0 50% 50%;
+            position: absolute;
+            bottom: 26px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .cartoon-face .blush {
+            width: 16px;
+            height: 10px;
+            border-radius: 50%;
+            position: absolute;
+            top: 42px;
+            opacity: 0.5;
+        }
+        .cartoon-face .blush.left {
+            left: 14px;
+            background: #FF6B9D;
+        }
+        .cartoon-face .blush.right {
+            right: 14px;
+            background: #FF6B9D;
+        }
+        /* 不同角色颜色 */
+        .face-pink {
+            background: #FDE4EC;
+        }
+        .face-blue {
+            background: #E0F2FE;
+        }
+        .face-green {
+            background: #D1FAE5;
+        }
+        .face-yellow {
+            background: #FEF9C3;
+        }
+        .face-purple {
+            background: #F3E8FF;
+        }
+        .face-orange {
+            background: #FFEDD5;
+        }
+
+        /* 帽子装饰 */
+        .cartoon-face .hat {
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+        }
+
+        .character-card h3 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+        .character-card .role {
+            display: inline-block;
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 50px;
+            margin-bottom: 10px;
+        }
+        .role-pink {
+            background: #FDE4EC;
+            color: #BE185D;
+        }
+        .role-blue {
+            background: #E0F2FE;
+            color: #1D4ED8;
+        }
+        .role-green {
+            background: #D1FAE5;
+            color: #047857;
+        }
+        .role-yellow {
+            background: #FEF9C3;
+            color: #A16207;
+        }
+        .role-purple {
+            background: #F3E8FF;
+            color: #6B21A8;
+        }
+        .role-orange {
+            background: #FFEDD5;
+            color: #C2410C;
+        }
+        .character-card .desc {
+            color: #7C6F7A;
+            font-size: 0.9rem;
+        }
+
+        /* ============================================
+            7. 趣味统计区
+           ============================================ */
+        .stats-section {
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(135deg, #FEF3C7, #FDE4EC, #F3E8FF);
+            padding: 60px 24px;
+            margin-bottom: 60px;
+        }
+        .stats-grid {
+            max-width: 900px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 24px;
+            text-align: center;
+        }
+        .stat-item .stat-number {
+            font-size: 2.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #FF6B9D, #C084FC);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .stat-item .stat-label {
+            font-weight: 600;
+            color: #7C6F7A;
+            font-size: 0.95rem;
+        }
+
+        /* ============================================
+            8. 画廊区
+           ============================================ */
+        .gallery-section {
+            position: relative;
+            z-index: 1;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px 80px;
+        }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .gallery-item {
+            aspect-ratio: 1;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            cursor: pointer;
+            transition: all 0.4s;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        .gallery-item:hover {
+            transform: scale(1.08) rotate(-3deg);
+            box-shadow: var(--shadow-hover);
+        }
+        .gallery-item:nth-child(1) {
+            background: #FDE4EC;
+        }
+        .gallery-item:nth-child(2) {
+            background: #E0F2FE;
+        }
+        .gallery-item:nth-child(3) {
+            background: #D1FAE5;
+        }
+        .gallery-item:nth-child(4) {
+            background: #FEF9C3;
+        }
+        .gallery-item:nth-child(5) {
+            background: #F3E8FF;
+        }
+        .gallery-item:nth-child(6) {
+            background: #FFEDD5;
+        }
+        .gallery-item .gallery-emoji {
+            transition: transform 0.4s;
+        }
+        .gallery-item:hover .gallery-emoji {
+            transform: scale(1.2);
+            animation: spin 0.6s;
+        }
+        @keyframes spin {
+            100% {
+                transform: scale(1.2) rotate(360deg);
+            }
+        }
+
+        /* ============================================
+            9. 联系 / CTA
+           ============================================ */
+        .cta-section {
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+            margin: 0 auto 80px;
+            padding: 48px 24px;
+            text-align: center;
+            background: #fff;
+            border-radius: 32px;
+            box-shadow: var(--shadow);
+            border: 3px dashed #FDE68A;
+        }
+        .cta-section h2 {
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 12px;
+        }
+        .cta-section p {
+            color: #7C6F7A;
+            margin-bottom: 24px;
+        }
+        .newsletter-form {
+            display: flex;
+            gap: 10px;
+            max-width: 420px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .newsletter-form input {
+            flex: 1;
+            min-width: 200px;
+            padding: 14px 20px;
+            border-radius: 50px;
+            border: 3px solid #E5E7EB;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .newsletter-form input:focus {
+            border-color: var(--purple);
+        }
+        .newsletter-form button {
+            padding: 14px 28px;
+            border-radius: 50px;
+            background: linear-gradient(135deg, var(--pink), var(--purple));
+            color: #fff;
+            font-weight: 700;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(192, 132, 252, 0.4);
+        }
+        .newsletter-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(192, 132, 252, 0.6);
+        }
+
+        /* ============================================
+            10. 页脚
+           ============================================ */
+        .footer {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 32px 24px;
+            border-top: 3px dashed #FDE68A;
+            color: #9CA3AF;
+            font-size: 0.9rem;
+        }
+        .footer .footer-emoji {
+            font-size: 1.4rem;
+            margin: 0 4px;
+        }
+
+        /* ============================================
+            11. 滚动弹出动画
+           ============================================ */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s, transform 0.7s;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ============================================
+            12. 响应式
+           ============================================ */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            .hero p {
+                font-size: 1rem;
+            }
+            .nav-links {
+                display: none;
+            }
+            .menu-toggle {
+                display: block;
+            }
+            /* 移动端菜单展开 */
+            .nav-links.mobile-open {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 64px;
+                left: 0;
+                right: 0;
+                background: #fff;
+                padding: 16px;
+                border-bottom: 3px dashed #FDE68A;
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            }
+            .floating-characters {
+                height: 140px;
+            }
+            .char {
+                font-size: 2rem !important;
+            }
+            .section-title {
+                font-size: 1.6rem;
+            }
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .cta-section {
+                margin: 0 16px 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ====== 背景装饰 ====== -->
+    <div class="bg-circle"></div>
+    <div class="bg-circle"></div>
+    <div class="bg-circle"></div>
+    <div class="bg-circle"></div>
+
+    <!-- ====== 导航栏 ====== -->
+    <nav class="navbar">
+        <div class="nav-inner">
+            <a href="#" class="nav-logo">
+                <span class="logo-icon">🎨</span>
+                卡通欢乐园
+            </a>
+            <button class="menu-toggle" onclick="toggleMenu()" aria-label="菜单">🍔</button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#characters">🎭 角色</a></li>
+                <li><a href="#gallery">🖼️ 画廊</a></li>
+                <li><a href="#about">💡 关于</a></li>
+                <li><a href="#contact" class="btn-nav">🚀 加入我们</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ====== Hero 区域 ====== -->
+    <section class="hero">
+        <div class="hero-badge">🌟 欢迎来到卡通世界</div>
+        <h1>发现<span class="gradient-text">最可爱</span>的<br>卡通小伙伴</h1>
+        <p>一个充满色彩、欢乐和想象力的卡通乐园。认识我们的卡通朋友，探索奇妙的卡通世界！</p>
+        <div class="hero-buttons">
+            <a href="#characters" class="btn btn-primary">🎭 认识新朋友</a>
+            <a href="#gallery" class="btn btn-outline">🖼️ 浏览画廊</a>
+        </div>
+    </section>
+
+    <!-- ====== 漂浮卡通角色 ====== -->
+    <div class="floating-characters">
+        <span class="char" title="小猫咪">🐱</span>
+        <span class="char" title="小兔子">🐰</span>
+        <span class="char" title="小狗狗">🐶</span>
+        <span class="char" title="小狐狸">🦊</span>
+        <span class="char" title="小熊猫">🐼</span>
+    </div>
+
+    <!-- ====== 统计数字 ====== -->
+    <div class="stats-section">
+        <div class="stats-grid">
+            <div class="stat-item fade-in">
+                <div class="stat-number">50+</div>
+                <div class="stat-label">🎭 卡通角色</div>
+            </div>
+            <div class="stat-item fade-in">
+                <div class="stat-number">100+</div>
+                <div class="stat-label">🖼️ 精美插画</div>
+            </div>
+            <div class="stat-item fade-in">
+                <div class="stat-number">10K+</div>
+                <div class="stat-label">😊 快乐粉丝</div>
+            </div>
+            <div class="stat-item fade-in">
+                <div class="stat-number">365</div>
+                <div class="stat-label">📅 每日更新</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== 角色展示 ====== -->
+    <section id="characters">
+        <div class="section-title fade-in">🎭 认识我们的卡通明星</div>
+        <p class="section-subtitle fade-in">每个角色都有独特的个性和故事</p>
+        <div class="characters-grid">
+            <!-- 角色 1 -->
+            <div class="character-card card-pink fade-in">
+                <div class="cartoon-face face-pink">
+                    <span class="hat">🎀</span>
+                    <div class="eye left"></div>
+                    <div class="eye right"></div>
+                    <div class="blush left"></div>
+                    <div class="blush right"></div>
+                    <div class="mouth"></div>
+                </div>
+                <h3>蜜蜜兔</h3>
+                <span class="role role-pink">🐰 甜美担当</span>
+                <p class="desc">喜欢胡萝卜和粉色蝴蝶结，是团队里最温柔的小伙伴。</p>
+            </div>
+            <!-- 角色 2 -->
+            <div class="character-card card-blue fade-in">
+                <div class="cartoon-face face-blue">
+                    <span class="hat">🧢</span>
+                    <div class="eye left"></div>
+                    <div class="eye right"></div>
+                    <div class="blush left"></div>
+                    <div class="blush right"></div>
+                    <div class="mouth"></div>
+                </div>
+                <h3>酷酷猫</h3>
+                <span class="role role-blue">🐱 冒险队长</span>
+                <p class="desc">戴着棒球帽的探险家，永远在寻找下一个冒险。</p>
+            </div>
+            <!-- 角色 3 -->
+            <div class="character-card card-green fade-in">
+                <div class="cartoon-face face-green">
+                    <span class="hat">🌿</span>
+                    <div class="eye left"></div>
+                    <div class="eye right"></div>
+                    <div class="blush left"></div>
+                    <div class="blush right"></div>
+                    <div class="mouth"></div>
+                </div>
+                <h3>豆豆龙</h3>
+                <span class="role role-green">🦕 开心果</span>
+                <p class="desc">圆滚滚的小恐龙，总是用笑声感染身边的每个人。</p>
+            </div>
+            <!-- 角色 4 -->
+            <div class="character-card card-yellow fade-in">
+                <div class="cartoon-face face-yellow">
+                    <span class="hat">👑</span>
+                    <div class="eye left"></div>
+                    <div class="eye right"></div>
+                    <div class="blush left"></div>
+                    <div class="blush right"></div>
+                    <div class="mouth"></div>
+                </div>
+                <h3>星星鸭</h3>
+                <span class="role role-yellow">🦆 梦想家</span>
+                <p class="desc">头顶皇冠的小鸭子，梦想是飞到星星上去。</p>
+            </div>
+            <!-- 角色 5 -->
+            <div class="character-card card-purple fade-in">
+                <div class="cartoon-face face-purple">
+                    <span class="hat">✨</span>
+                    <div class="eye left"></div>
+                    <div class="eye right"></div>
+                    <div class="blush left"></div>
+                    <div class="blush right"></div>
+                    <div class="mouth"></div>
+                </div>
+                <h3>魔法狐</h3>
+                <span class="role role-purple">🦊 魔法师</span>
+                <p class="desc">拥有神奇魔法的小狐狸，能把云朵变成棉花糖。</p>
+            </div>
+            <!-- 角色 6 -->
+            <div class="character-card card-orange fade-in">
+                <div class="cartoon-face face-orange">
+                    <span class="hat">🎸</span>
+                    <div class="eye left"></div>
+                    <div class="eye right"></div>
+                    <div class="blush left"></div>
+                    <div class="blush right"></div>
+                    <div class="mouth"></div>
+                </div>
+                <h3>摇滚熊</h3>
+                <span class="role role-orange">🐻 音乐家</span>
+                <p class="desc">抱着吉他的小熊，用音乐给大家带来快乐。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== 画廊 ====== -->
+    <section class="gallery-section" id="gallery">
+        <div class="section-title fade-in">🖼️ 卡通画廊</div>
+        <p class="section-subtitle fade-in">点击图标，感受卡通世界的缤纷色彩</p>
+        <div class="gallery-grid">
+            <div class="gallery-item fade-in" onclick="showToast('🌈 彩虹世界！')">
+                <span class="gallery-emoji">🌈</span>
+            </div>
+            <div class="gallery-item fade-in" onclick="showToast('🦄 独角兽来啦！')">
+                <span class="gallery-emoji">🦄</span>
+            </div>
+            <div class="gallery-item fade-in" onclick="showToast('🎪 马戏团表演！')">
+                <span class="gallery-emoji">🎪</span>
+            </div>
+            <div class="gallery-item fade-in" onclick="showToast('🎠 旋转木马！')">
+                <span class="gallery-emoji">🎠</span>
+            </div>
+            <div class="gallery-item fade-in" onclick="showToast('🎈 气球飞走了！')">
+                <span class="gallery-emoji">🎈</span>
+            </div>
+            <div class="gallery-item fade-in" onclick="showToast('🍭 甜甜的糖果！')">
+                <span class="gallery-emoji">🍭</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== CTA ====== -->
+    <section class="cta-section fade-in" id="contact">
+        <h2>📬 加入卡通欢乐园</h2>
+        <p>订阅我们的卡通日报，每天收到可爱的卡通壁纸和趣事！</p>
+        <form class="newsletter-form" onsubmit="handleSubscribe(event)">
+            <input type="email" placeholder="输入你的邮箱地址..." required>
+            <button type="submit">🎁 免费订阅</button>
+        </form>
+    </section>
+
+    <!-- ====== 页脚 ====== -->
+    <footer class="footer">
+        <p>
+            用 <span class="footer-emoji">❤️</span> 和
+            <span class="footer-emoji">🎨</span> 绘制 —
+            &copy; 2026 卡通欢乐园
+            <span class="footer-emoji">🌟</span>
+        </p>
+    </footer>
+
+    <!-- ====== Toast 提示 ====== -->
+    <div id="toast" style="
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: #333;
+    color: #fff;
+    padding: 12px 28px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 1rem;
+    z-index: 9999;
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    pointer-events: none;
+    "></div>
+
+    <script>
+        /* ============================================
+           JavaScript 交互
+           ============================================ */
+
+        // --- 移动端菜单切换 ---
+        function toggleMenu() {
+            const nav = document.getElementById('navLinks');
+            nav.classList.toggle('mobile-open');
+        }
+
+        // --- 滚动渐入动画 ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.15, rootMargin: '0px 0px -30px 0px' });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // --- Toast 提示 ---
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.style.opacity = '1';
+            toast.style.transform = 'translateX(-50%) translateY(0)';
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(-50%) translateY(100px)';
+            }, 1800);
+        }
+
+        // --- 订阅表单 ---
+        function handleSubscribe(e) {
+            e.preventDefault();
+            const input = e.target.querySelector('input');
+            const email = input.value.trim();
+            if (email) {
+                showToast('🎉 订阅成功！欢迎加入卡通欢乐园~');
+                input.value = '';
+            }
+        }
+
+        // --- 点击漂浮角色 ---
+        document.querySelectorAll('.char').forEach(char => {
+            char.addEventListener('click', function() {
+                const name = this.getAttribute('title');
+                showToast(`👋 你好！我是${name}！`);
+                // 弹跳动画
+                this.style.animation = 'none';
+                this.offsetHeight; // reflow
+                this.style.animation = 'float 4s infinite ease-in-out';
+            });
+        });
+
+        // --- 统计数字滚动动画 ---
+        function animateNumbers() {
+            document.querySelectorAll('.stat-number').forEach(el => {
+                const text = el.textContent;
+                const match = text.match(/^([\d.]+)(\+?K?)$/);
+                if (!match || el.dataset.animated) return;
+                el.dataset.animated = '1';
+                const target = parseFloat(match[1]);
+                const suffix = match[2];
+                const duration = 1500;
+                const start = performance.now();
+                const isInt = Number.isInteger(target) && text.indexOf('.') === -1;
+
+                function update(now) {
+                    const elapsed = now - start;
+                    const progress = Math.min(elapsed / duration, 1);
+                    // easeOutExpo
+                    const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+                    const current = isInt ?
+                        Math.floor(eased * target) :
+                        (eased * target).toFixed(1);
+                    el.textContent = current + suffix;
+                    if (progress < 1) {
+                        requestAnimationFrame(update);
+                    } else {
+                        el.textContent = text; // 确保最终值准确
+                    }
+                }
+                requestAnimationFrame(update);
+            });
+        }
+
+        // 统计数字区域进入视图时触发
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateNumbers();
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.3 });
+        const statsSection = document.querySelector('.stats-section');
+        if (statsSection) statsObserver.observe(statsSection);
+
+        console.log('🎨 卡通欢乐园已就绪！欢迎探索~');
+    </script>
+</body>
+</html>
